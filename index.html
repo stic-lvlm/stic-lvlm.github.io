@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="STIC: Enhancing LVLMs with Self-Training on Image Comprehension">
+  <meta name="keywords" content="STIC, LVLMs">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> STIC: Enhancing LVLMs with Self-Training on Image Comprehension</title>
+
+  <link rel="icon" href="./static/logos/stic.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/explorer-index.js"></script>
+
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://sites.google.com/g.ucla.edu/yihedeng/home">
+        <span class="icon">
+            <i class="fas fa-home"></i>
+        </span>
+      </a>
+      <a class="navbar-item" href="https://lupantech.github.io/">
+        <span class="icon">
+            <i class="fas fa-home"></i>
+        </span>
+      </a>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://github.com/uclaml/SPIN">
+            <b>SPIN</b> <p style="font-size:18px; display: inline; margin-left: 5px;">🔥</p>
+          </a>
+          <a class="navbar-item" href="https://mathvista.github.io/">
+            <b>MathVista</b> <p style="font-size:18px; display: inline; margin-left: 5px;">🔥</p>
+          </a>
+          <a class="navbar-item" href="https://scienceqa.github.io/">
+            <b>ScienceQA</b> <p style="font-size:18px; display: inline; margin-left: 5px;">🔥</p>
+          </a>
+          <a class="navbar-item" href="https://chameleon-llm.github.io/">
+            <b>Chameleon</b> <p style="font-size:18px; display: inline; margin-left: 5px;">🔥</p>
+          </a>
+          <a class="navbar-item" href="https://github.com/OpenGVLab/LLaMA-Adapter">
+            <b>LLaMA-Adapter (V2)</b> <p style="font-size:18px; display: inline; margin-left: 5px;">🔥</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title is-bold">
+            <!-- <span class="mathvista" style="vertical-align: middle">STIC</span> -->
+            <span>STIC: Enhancing LVLMs with Self-Training on Image Comprehension</span>
+          </h1>
+          <!-- <h2 class="subtitle is-3 publication-subtitle">
+            Enhancing LVLMs with Self-Training on Image Comprehension
+          </h2> -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://sites.google.com/g.ucla.edu/yihedeng/home">Yihe Deng</a>*<sup style="color:#005587;">1</sup>,</span>
+            <span class="author-block">
+              <a href="https://lupantech.github.io/">Pan Lu</a>*<sup style="color:#005587;">1</sup><sup>,</sup><sup style="color:#8C1515;">3</sup>,</span>
+            <span class="author-block">
+              <a href="https://fanyin3639.github.io/">Fan Yin</a><sup style="color:#005587;">1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://acbull.github.io/">Ziniu Hu</a><sup style="color:#005587">1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://sincerass.github.io/">Sheng She</a><sup style="color:#FDB515">2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.james-zou.com/">James Zou</a><sup style="color:#8C1515">3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="http://web.cs.ucla.edu/~kwchang/">Kai-Wei Chang</a><sup style="color:#005587;">1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://web.cs.ucla.edu/~weiwang/">Wei Wang</a><sup style="color:#005587">1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup style="color:#005587;">1</sup>University of California, Los Angeles,</span><br>
+            <span class="author-block"><sup style="color:#FDB515">2</sup>University of California, Berkeley,</span>
+            <span class="author-block"><sup style="color:#8C1515">3</sup>Stanford University</span><br>
+            <span class="paper-block"><b >* Equal Contribution</b> </span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2405.XXXXX.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2405.XXXXX"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/yihedeng9/STIC"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://huggingface.co/datasets/AI4Math/MathVista"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <p style="font-size:18px">🤗</p>
+                  </span>
+                  <span>Hugging Face</span>
+                </a>
+              </span>
+              <!-- Twitter Link. -->
+              <span class="link-block">
+                <a href="https://twitter.com/lupantech/status/1717313355780964608"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <p style="font-size:18px">🌐</p>
+                  </span>
+                  <span>Twitter</span>
+                </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="content has-text-centered">
+      <img src="figures/demo-method.png" alt="geometric reasoning" width="100%"/>
+      <p> 
+        Framework overview of <b>STIC</b>, <b>a two-stage self-training algorithm focusing on the image comprehension capability of the LVLMs</b>.</br> 
+        In <b>Stage 1</b>, the base LVLM self-constructs its preference dataset for image description using well-designed prompts, poorly-designed prompts, and distorted images.
+        In <b>Stage 2</b>, a small portion of the previously used supervised fine-tuning (supervised fine-tuning (SFT)) data is recycled and infused with model-generated image descriptions to further fine-tune the base LVLM.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- Introduction -->
+<section class="section">
+  <div class="container" style="margin-bottom: 2vh;">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Introduction</h2>
+        <div class="content has-text-justified">
+          <p>
+            <b>Large vision language models (LVLMs)</b> integrate large language models (LLMs) with pre-trained vision encoders, thereby activating the perception capability of the model to understand image inputs for different queries and conduct subsequent reasoning. Improving this capability requires high-quality vision-language data, which is costly and labor-intensive to acquire. <b>Self-training</b> approaches have been effective in single-modal settings to alleviate the need for labeled data by leveraging model's own generation. However, effective self-training remains a challenge regarding the unique visual perception and reasoning capability of LVLMs. 
+          </p>
+          <p>
+            To address this, we introduce <b>S</b>elf-<b>T</b>raining on <b>I</b>mage <b>C</b>omprehension (<b>STIC</b>), which emphasizes <b>a self-training approach specifically for image comprehension</b>. First, the model self-constructs a preference dataset for image descriptions using unlabeled images. Preferred responses are generated through a step-by-step prompt, while dis-preferred responses are generated from either corrupted images or misleading prompts. To further self-improve reasoning on the extracted visual information, we let the model reuse a small portion of existing instruction-tuning data and append its self-generated image descriptions to the prompts.
+          </p>
+          <p>
+            We validate the effectiveness of <b>STIC</b> across <b>seven</b> different benchmarks, demonstrating substantial performance gains of <b>4.0%</b> on average while using <b>70%</b> less supervised fine-tuning data than the current method. Further studies dive into various components of <b>STIC</b> and highlight its potential to leverage vast quantities of unlabeled images for self-training.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Preferenced Data -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+        <h2 class="title is-3">STIC: Self-constructed Preferenced Data</h2>
+        <div class="content has-text-justified">
+          <p>
+            <b>STIC</b> specifically emphasizes the image comprehension self-training of LVLMs where the model generates its own preference dataset focused on image description. The self-generated <b>dis-preferred</b> response is obtained by gathering mode responses from either (1) prompts likely to elicit inaccurate responses or (2) corrupted images. The <b>preferred</b> responses are collected via a detailed prompt that guides the model through a step-by-step image description process.
+          </p>
+          <div id="results-carousel" class="carousel results-carousel">
+
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="figures/fig2_preference_data.png" alt="image name" width="90%"/>
+                <p> Examples of the self-constructed preference data in <b>STIC</b>.</p>
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="figures/appendix_example_wine.png" alt="image name" width="90%"/>
+                <p> Example of generated preference data, where the dis-preferred response is generated from
+                  bad prompting.</p>
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="figures/appendix_example_birthday.png" alt="image name" width="90%"/>
+                <p> Example of generated preference data, where the dis-preferred response is generated from
+                  images with lower resolution.</p>
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="figures/appendix_example_birthday2.png" alt="image name" width="90%"/>
+                <p> Example of generated preference data, where the dis-preferred response is generated from
+                  images with color jittering.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Fine-Tuning -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+        <h2 class="title is-3">STIC: Two-stage Self-Training</h2>
+        <div class="content has-text-justified">
+          <p>
+            We introduce <b>STIC</b>, a two-stage self-training algorithm designed to enhance image comprehension capabilities. The first stage constructs its own preference dataset and the second stage infuses the used supervised fine-tuning (SFT) data with self-generated image descriptions for fine-tuning.
+          </p>
+          <p>
+            <b>STIC</b> specifically emphasizes the <b>image comprehension self-training</b> of LVLMs where the model generates its own preference dataset focused on image description. The self-generated <b>dis-preferred response</b> is obtained by gathering model responses from either (1) prompts likely to elicit inaccurate responses or (2) corrupted images. The <b>preferred responses</b> are collected via a detailed prompt that guides the model through a step-by-step image description process. 
+          </p>
+          <p>During fine-tuning, we consider a direct preference optimization (DPO) loss with an additional regularized term explicitly emphasizing the preferred response. Lastly, we allow the model to self-improve its reasoning ability based on its own extracted image information by reusing a small amount of existing instruction fine-tuning data and appending its self-generated image descriptions to the prompts. We refer to this second stage as <b>description-infused fine-tuning</b>. Notably, our <b>STIC</b> approach <b>does not require pre-labeled information of the images</b>, which contrasts to the recent works that rely on such information for constructing vision-language preference data.
+          </p>
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="figures/Algorithm1.png" alt="image name" width="90%"/>
+                <p> Stage 1: image comprehension self-training for <b>STIC</b>.</p>
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="figures/Algorithm2.png" alt="image name" width="90%"/>
+                <p> Stage 2: description-infused fine-tuning for <b>STIC</b>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Results -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+        <h2 class="title is-3">STIC: Main Results</h2>
+        <div class="content has-text-justified">
+          <p>
+            To demonstrate the effectiveness of <b>STIC</b>, we conduct extensive experiments on seven vision-language benchmarks, including <a href="https://scienceqa.github.io/">ScienceQA</a>, <a href="https://textvqa.org/">TextVQA</a>, <a href="https://arxiv.org/abs/2203.10244">ChartQA</a>, <a href="https://github.com/haotian-liu/LLaVA/blob/main/docs/LLaVA_Bench.md">LLaVA-Bench</a>, <a href="https://arxiv.org/abs/2307.06281">MMBench</a>, <a href="https://github.com/yuweihao/MM-Vet">MM-Vet</a>, and <a href="https://mathvista.github.io/">MathVista</a>. These benchmarks encompass scientific reasoning, math reasoning, optical character recognition (OCR), and conversation capabilities based on vision inputs, spanning various image sources such as natural, chart, and text-rich images. We employ <a href="https://huggingface.co/liuhaotian/llava-v1.6-mistral-7b">LLaVA-v1.6</a> as the primary base LVLM for our experiments and unitize 6,000 images from <a href="https://cocodataset.org/#home">MSCOCO</a> to construct the image description preference data.
+          </p>
+          <img src="figures/Figure1.png" alt="geometric reasoning" width="99%"/>
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            <b>STIC</b> achieves consistent and significant performance improvements across these benchmarks, with an average accuracy gain of <b>4.0%</b> over the base LVLM and a notable gain of <b>6.4%</b> on ScienceQA. 
+            These results demonstrate the remarkable effectiveness of our image comprehension self-training approach in enhancing the visual perception capabilities of LVLMs. 
+          </p>
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="figures/Table1.png" alt="image name" width="90%"/>
+                <!-- <p> Stage 1: image comprehension self-training for <b>STIC</b>.</p> -->
+              </div>
+            </div>
+            <div class="box m-5">
+              <div class="content has-text-centered">
+                <img src="figures/Table2.png" alt="image name" width="90%"/>
+                <!-- <p> Stage 2: description-infused fine-tuning for <b>STIC</b>.</p> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS SECTION -->
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body has-text-centered">
+    <h1 class="title is-1 XXXX">Experiment Results</h1>
+  </div>
+</section> -->
+
+<!-- t-SNE Visualization -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered m-6">
+      <div class="column is-full has-text-centered content">
+        <h2 class="title is-3">STIC: t-SNE Visualization</h2>
+        <div class="content has-text-justified">
+          <p>
+            To gain further insight into the effectiveness of <b>STIC</b> across different benchmarks, we conducted a t-SNE visualization analysis comparing the image distributions of <a href="https://cocodataset.org/#home">MSCOCO</a>, which we used for preference data construction, with those of four benchmarks: <a href="https://scienceqa.github.io/">ScienceQA</a>, <a href="https://textvqa.org/">TextVQA</a>, <a href="https://mathvista.github.io/">MathVista</a>, and <a href="https://arxiv.org/abs/2203.10244">ChartQA</a>. 
+          </p>
+          <p>
+            Our analysis revealed a general trend: the greater the overlap between the <a href="https://cocodataset.org/#home">MSCOCO</a> image distribution and that of a benchmark, the higher the performance gain achieved by <b>STIC</b> on that benchmark.
+            This observation held true for <a href="https://scienceqa.github.io/">ScienceQA</a> and <a href="https://textvqa.org/">TextVQA</a>, which exhibited substantial distributional overlap with <a href="https://cocodataset.org/#home">MSCOCO</a> and yielded the highest performance gains of 6.4% and 4.9%, respectively. Conversely, <a href="https://mathvista.github.io/">MathVista</a>, with its diverse image types and limited overlap with <a href="https://cocodataset.org/#home">MSCOCO</a>, saw a more modest gain of 2.4%. Interestingly, <a href="https://arxiv.org/abs/2203.10244">ChartQA</a> was an outlier, achieving a high gain of 5.1% despite minimal overlap with <a href="https://cocodataset.org/#home">MSCOCO</a>, suggesting that the improved image comprehension from <b>STIC</b> played a fundamental role in understanding and reasoning about the charts.
+          </p>
+        </div>
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="figures/tsne_plot_all_datasets_no_LLaVA-Bench_MMBench_MM-Vet.png" alt="image name" width="70%"/>
+              <p>
+                t-SNE visualization of images from <a href="https://cocodataset.org/#home">MSCOCO</a> and four benchmarks, each sampling 1,000 images.
+              </p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="figures/tsne_plot_ScienceQA_with_COCO.png" alt="image name" width="70%"/>
+              <p>
+                t-SNE visualization of images from <a href="https://cocodataset.org/#home">MSCOCO</a> and <a href="https://scienceqa.github.io/">ScienceQA</a>.  
+              </p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="figures/tsne_plot_TextVQA_with_COCO.png" alt="image name" width="70%"/>
+              <p>
+                t-SNE visualization of images from <a href="https://cocodataset.org/#home">MSCOCO</a> and <a href="https://textvqa.org/">TextVQA</a>.
+              </p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="figures/tsne_plot_MathVista_with_COCO.png" alt="image name" width="70%"/>
+              <p>
+                t-SNE visualization of images from <a href="https://cocodataset.org/#home">MSCOCO</a> and <a href="https://mathvista.github.io/">MathVista</a>.
+              </p>
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="figures/tsne_plot_ChartQA_with_COCO.png" alt="image name" width="70%"/>
+              <p>
+                t-SNE visualization of images from <a href="https://cocodataset.org/#home">MSCOCO</a> and <a href="https://arxiv.org/abs/2203.10244">ChartQA</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- @PAN TODO: bibtex -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3 has-text-centered">BibTeX</h2>
+
+    <pre><code>@article{deng2024enhancing,
+  author = {Deng, Yihe Deng and Lu, Pan and Yin, Fan and Hu, Ziniu and Shen, Sheng and Zou, James and Chang, Kai-Wei and Wang, Wei},
+  title = {Enhancing Large Vision Language Models with Self-Training on Image Comprehension},
+  journal = {arXiv preprint arXiv:2405.XXXXX},
+  year = {2024}
+}</code></pre>
+  </div>
+</section>
+
+<section>
+  <div class="section" id="org-banners" style="display:flex">
+    <a href="https://www.ucla.edu/" target="_blank" rel="external">
+        <img class="center-block org-banner" src="static/logos/ucla.png">
+    </a>
+    <a href="https://www.berkeley.edu/" target="blank" class="ext-link">
+        <img class="center-block org-banner" src="static/logos/ucb.png">
+    </a>
+    <a href="https://www.stanford.edu/" target="_blank" rel="external">
+        <img class="center-block org-banner" src="static/logos/stanford.webp">
+    </a>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <!-- <div class="container"> -->
+    <div class="content has-text-centered">
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is website adapted from <a href="https://nerfies.github.io/">Nerfies</a> and <a href="https://mathvista.github.io/">MathVista</a>, licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  <!-- </div> -->
+</footer>
+
+</body>
+</html>
